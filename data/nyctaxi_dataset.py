@@ -59,24 +59,41 @@ class NYCTaxiDataset(object):
         """Clean outliers"""
         self.logger.info('\t cleaning outliers...')
         self.logger.debug("\t\tOld size: {}".format(data.shape))
-        # Passenger Count
+        # Passenger Count outliers if greater than 7
         data = data[(data[Col.COUNT] > 0) & data[Col.COUNT] < 7]
 
-        # Fare Amount
-        data = data[(data[Col.FA] > 0) &
-                    data[Col.FA] < data[Col.FA].quantile(.9999)]
+        # Fare Amount outliers < 2.5 and > 100
+        neg = "There are {} negative fares.".format(len(data[data['fare_amount'] < 0]))
+        zero = "There are {} $0 fares.".format(len(data[data['fare_amount'] == 0]))
+        greater = "There are {} fares greater than $100.".format(len(data[data['fare_amount'] > 100]))
+        self.logger.debug(neg)
+        self.logger.debug(zero)
+        self.loger.debug(greater)
+
+        data = data[data[Col.FA].between(left=2.5, right=100)]
 
         # Pickup and dropoff locations
         for i in COORD:
-            data = data[(data[i] > data[i].quantile(.001)) &
-                        (data[i] < data[i].quantile(.999))]
+            self.logger.debug('{:17}: 2.5% = {:5} \t 97.5% = {}'.
+                              format(i.capitalize(),
+                                     round(np.percentile(data[i], 2.5), 2)),
+                              round(np.percentile(data[i], 97.5), 2))
+
+        # Remove latitude and longtiude outliers
+        data = data.loc[data[Col.PU_LAT].between(40, 42)]
+        data = data.loc[data[Col.PU_LONG].between(-75, -72)]
+        data = data.loc[data[Col.DO_LAT].between(40, 42)]
+        data = data.loc[data[Col.DO_LONG].between(-75, -72)]
+
         self.logger.debug("\t\tNew size: {}".format(data.shape))
         return data
 
     def generate_feature(self, data):
         """Generate additional features from existing features"""
+        # Calculate log of fare amount
         data[Col.LOG_FA] = np.log(data[Col.FA])
 
+        # Calculate haversine distance
         #TODO write distance function in d.utils
         R = 6373.0
         cdict = {c: np.radians(data[c]) for c in COORD}
@@ -90,5 +107,10 @@ class NYCTaxiDataset(object):
 
         data[Col.TRIP_DIST] = d
         data[Col.LOG_TRIP] = np.log(data[Col.TRIP_DIST])
+
+        # Calculate absolute difference in latitude and longitude
+        data[Col.ABS_LAT_DIFF] = (data[Col.DO_LAT] - data[Col.PU_LAT]).abs()
+        data[Col.ABS_LON_DIFF] = (data[Col.DO_LONG] - data[Col.PU_LONG]).abs()
         self.logger.info('\t generated features...')
         return data
+

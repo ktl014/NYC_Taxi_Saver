@@ -64,7 +64,7 @@ class Dataset(object):
 
     def transform(self):
         """Transform dataset for model input"""
-        pass
+
 
     def get_labels(self, data):
         labels = data[Col.FA]

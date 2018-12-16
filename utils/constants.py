@@ -13,6 +13,9 @@ class Col():
     DO_LAT = 'dropoff_latitude'
     COUNT = 'passenger_count'
 
+    ABS_LAT_DIFF = 'abs_lat_diff'
+    ABS_LON_DIFF = 'abs_lon_diff'
+
     TRIP_DIST = 'trip_distance_km'
     LOG_TRIP = 'log_trip_distance'
 
