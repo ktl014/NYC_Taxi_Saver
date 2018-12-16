@@ -4,3 +4,5 @@ utils/*.pyc
 .idea/*
 data/__pycache__/*
 utils/__pycache__/*
+logs/
+.DS_STORE
