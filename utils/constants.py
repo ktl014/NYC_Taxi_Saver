@@ -6,6 +6,7 @@ class Col():
     KEY = 'key'
     FA = 'fare_amount'
     LOG_FA = 'log_fare_amount'
+    BIN_FA = 'fare_bin'
 
     PU_LONG = 'pickup_longitude'
     PU_LAT = 'pickup_latitude'
@@ -15,6 +16,8 @@ class Col():
 
     ABS_LAT_DIFF = 'abs_lat_diff'
     ABS_LON_DIFF = 'abs_lon_diff'
+    MANHAT = 'manhattan'
+    EUCLID = 'euclid'
 
     TRIP_DIST = 'trip_distance_km'
     LOG_TRIP = 'log_trip_distance'

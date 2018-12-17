@@ -32,7 +32,7 @@ class Dataset(object):
     def __len__(self):
         return len(self.db)
 
-    def prepare(self):
+    def prepare(self, train_model=False):
         """Prepares dataset for conducting statistics"""
         since = time.time()
         self.nyc = NYCTaxiDataset()
@@ -42,7 +42,10 @@ class Dataset(object):
         data = self.nyc.clean_null_values(self.data)
 
         # Extract datetime features
-        data = self.nyc.extract_datetime(data)
+        if train_model:
+            data = self.nyc.extract_dateinfo(data)
+        else:
+            data = self.nyc.extract_datetime(data)
 
         # Clean outliers
         data = self.nyc.clean_outliers(data)

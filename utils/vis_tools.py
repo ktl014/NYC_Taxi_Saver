@@ -16,11 +16,6 @@ import os #operating system dependent modules of Python
 import matplotlib.pyplot as plt #visualization
 import seaborn as sns #visualization
 import itertools
-import plotly.offline as py#visualization
-py.init_notebook_mode(connected=True)#visualization
-import plotly.graph_objs as go#visualization
-import plotly.tools as tls#visualization
-import plotly.figure_factory as ff#visualization
 
 
 def plot_ecdf(data):
@@ -36,3 +31,33 @@ def plot_ecdf(data):
     plt.ylabel('Percentile');
     plt.title('ECDF of Fare Amount');
     plt.xlabel('Fare Amount ($)');
+
+
+from sklearn.metrics import mean_squared_error, explained_variance_score
+
+
+def plot_prediction_analysis(y, y_pred, figsize=(10, 4), title=''):
+    fig, axs = plt.subplots(1, 2, figsize=figsize)
+    axs[0].scatter(y, y_pred)
+    mn = min(np.min(y), np.min(y_pred))
+    mx = max(np.max(y), np.max(y_pred))
+    axs[0].plot([mn, mx], [mn, mx], c='red')
+    axs[0].set_xlabel('$y$')
+    axs[0].set_ylabel('$\hat{y}$')
+    rmse = np.sqrt(mean_squared_error(y, y_pred))
+    evs = explained_variance_score(y, y_pred)
+    axs[0].set_title('rmse = {:.2f}, evs = {:.2f}'.format(rmse, evs))
+
+    axs[1].hist(y - y_pred, bins=50)
+    avg = np.mean(y - y_pred)
+    std = np.std(y - y_pred)
+    axs[1].set_xlabel('$y - \hat{y}$')
+    axs[1].set_title(
+        'Histrogram prediction error, $\mu$ = {:.2f}, $\sigma$ = {:.2f}'.format(
+            avg, std))
+
+    if title != '':
+        fig.suptitle(title)
+
+
+

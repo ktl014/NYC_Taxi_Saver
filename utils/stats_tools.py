@@ -1,4 +1,4 @@
-""" """
+"""Statistical Tools"""
 # Standard dist imports
 
 # Third party imports
