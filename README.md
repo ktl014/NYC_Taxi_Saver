@@ -1,4 +1,6 @@
 # NYC_Taxi_Saver
+Project to predict New York City Taxi Fares using statistical analysis and 
+machine learning
 
 # Download dataset
 The dataset can be found here for download:
