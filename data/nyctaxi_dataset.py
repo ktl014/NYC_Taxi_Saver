@@ -37,26 +37,6 @@ class NYCTaxiDataset(object):
         self.logger.debug("\t\tNew size: {}".format(data.shape))
         return data
 
-    def extract_datetime(self, data):
-        """Extract datetime parameters from given datetime"""
-        # Convert to date format
-        fmt = "%Y-%m-%d %H:%M:%S"
-        self.logger.info('\t extracting datetime variables...')
-        data[Col.DATETIME] = data[Col.DATETIME].str.replace("UTC", "")
-        data[Col.DATETIME] = pd.to_datetime(data[Col.DATETIME], format=fmt)
-
-        # Extract year, month, day, and hour
-        data[Col.YEAR] = pd.DatetimeIndex(data[Col.DATETIME]).year
-        data[Col.MONTH] = pd.DatetimeIndex(data[Col.DATETIME]).month
-        data[Col.MONTH_NAME] = data[Col.MONTH].apply(lambda x:
-                                                     calendar.month_abbr[x])
-        data[Col.MONTH_YEAR] = data[Col.YEAR].astype(str) + ' - ' + data[
-            Col.MONTH_NAME]
-        data[Col.WEEK_DAY] = data[Col.DATETIME].dt.weekday_name
-        data[Col.DAY] = data[Col.DATETIME].dt.day
-        data[Col.HOUR] = data[Col.DATETIME].dt.hour
-        return data
-
     def clean_outliers(self, data):
         """Clean outliers"""
         self.logger.info('\t cleaning outliers...')
@@ -68,18 +48,17 @@ class NYCTaxiDataset(object):
         neg = "There are {} negative fares.".format(len(data[data['fare_amount'] < 0]))
         zero = "There are {} $0 fares.".format(len(data[data['fare_amount'] == 0]))
         greater = "There are {} fares greater than $100.".format(len(data[data['fare_amount'] > 100]))
-        self.logger.debug(neg)
-        self.logger.debug(zero)
-        self.logger.debug(greater)
+        for msg in [neg, zero, greater]:
+            self.logger.debug('\t{}'.format(msg))
 
         data = data[data[Col.FA].between(left=2.5, right=100)]
 
         # Pickup and dropoff locations
         for i in COORD:
-            self.logger.debug('{:17}: 2.5% = {:5} \t 97.5% = {}'.
+            self.logger.debug('\t{:17}: 2.5% = {:5} \t 97.5% = {}'.
                               format(i.capitalize(),
-                                     round(np.percentile(data[i], 2.5), 2)),
-                              round(np.percentile(data[i], 97.5), 2))
+                                     round(np.percentile(data[i], 2.5), 2),
+                              round(np.percentile(data[i], 97.5), 2)))
 
         # Remove latitude and longtiude outliers
         data = data.loc[data[Col.PU_LAT].between(40, 42)]
@@ -93,10 +72,7 @@ class NYCTaxiDataset(object):
     def extract_dateinfo(self, data, date_col, drop=True, time=False,
                          start_ref=pd.datetime(1900, 1, 1),
                          extra_attr=False):
-        """
-        Extract Date (and time) Information from a DataFrame
-        Adapted from: https://github.com/fastai/fastai/blob/master/fastai/structured.py
-        """
+        """Extract Date (and time) Information from a DataFrame"""
         df = data.copy()
 
         # Extract the field
@@ -139,8 +115,7 @@ class NYCTaxiDataset(object):
         if time:
             # Add fractional time of day (0 - 1) units of day
             df[pre + 'frac_day'] = ((df[pre + 'Hour']) + (
-                        df[pre + 'Minute'] / 60) + (df[
-                                                        pre + 'Second'] / 60 / 60)) / 24
+                        df[pre + 'Minute'] / 60) + (df[pre + 'Second'] / 60 / 60)) / 24
 
             # Add fractional time of week (0 - 1) units of week
             df[pre + 'frac_week'] = (df[pre + 'Dayofweek'] + df[

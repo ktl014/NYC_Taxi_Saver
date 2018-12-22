@@ -42,20 +42,14 @@ class Dataset(object):
         data = self.nyc.clean_null_values(self.data)
 
         # Extract datetime features
-        if train_model:
-            data = self.nyc.extract_dateinfo(data)
-        else:
-            data = self.nyc.extract_datetime(data)
+        data = self.nyc.extract_dateinfo(data, Col.DATETIME, time=True,
+                                             extra_attr=True)
 
         # Clean outliers
         data = self.nyc.clean_outliers(data)
 
         # Generate trip distance and fare amount features
         data = self.nyc.generate_feature(data)
-
-        # Sort values
-        data = data.sort_values(by=Col.DATETIME,
-                                ascending=False).reset_index(drop=True)
 
         Logger.section_break('List of Features')
         for i,c in enumerate(sorted(data.columns.values)):
@@ -67,6 +61,7 @@ class Dataset(object):
 
     def transform(self):
         """Transform dataset for model input"""
+        pass
 
 
     def get_labels(self, data):

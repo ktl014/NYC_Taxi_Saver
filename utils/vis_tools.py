@@ -36,7 +36,8 @@ def plot_ecdf(data):
 from sklearn.metrics import mean_squared_error, explained_variance_score
 
 
-def plot_prediction_analysis(y, y_pred, figsize=(10, 4), title=''):
+def plot_prediction_analysis(y, y_pred, figsize=(10, 4), title='',
+                             visualize=False):
     fig, axs = plt.subplots(1, 2, figsize=figsize)
     axs[0].scatter(y, y_pred)
     mn = min(np.min(y), np.min(y_pred))
@@ -58,6 +59,9 @@ def plot_prediction_analysis(y, y_pred, figsize=(10, 4), title=''):
 
     if title != '':
         fig.suptitle(title)
+
+    if visualize:
+        plt.show()
 
 
 

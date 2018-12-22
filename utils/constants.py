@@ -23,13 +23,28 @@ class Col():
     LOG_TRIP = 'log_trip_distance'
 
     DATETIME = 'pickup_datetime'
-    YEAR = 'year'
-    MONTH = 'month'
-    MONTH_NAME = 'month_name'
-    MONTH_YEAR = 'month_year'
-    WEEK_DAY = 'week_day'
-    DAY = 'day'
-    HOUR = 'hour'
-
+    pickup_year = "pickup_Year"
+    pickup_month = "pickup_Month"
+    pickup_week = "pickup_Week"
+    pickup_day = "pickup_Day"
+    pickup_dayofweek = "pickup_Dayofweek"
+    pickup_dayofyear = "pickup_Dayofyear"
+    pickup_days_in_month = "pickup_Days_in_month"
+    pickup_is_leap_year = "pickup_is_leap_year"
+    pickup_is_month_end = "pickup_Is_month_end"
+    pickup_is_month_start = "pickup_Is_month_start"
+    pickup_is_quarter_end = "pickup_Is_quarter_end"
+    pickup_is_quarter_start = "pickup_Is_quarter_start"
+    pickup_is_year_end = "pickup_Is_year_end"
+    pickup_is_year_start = "pickup_Is_year_start"
+    pickup_hour = "pickup_Hour"
+    pickup_minute = "pickup_Minute"
+    pickup_second = "pickup_Second"
+    pickup_days_in_year = "pickup_Days_in_year"
+    pickup_frac_day = "pickup_frac_day"
+    pickup_frac_week = "pickup_frac_week"
+    pickup_frac_month = "pickup_frac_month"
+    pickup_frac_year = "pickup_frac_year"
+    pickup_elapsed = "pickup_Elapsed"
 
 COORD = [Col.PU_LONG, Col.PU_LAT, Col.DO_LONG, Col.DO_LAT]

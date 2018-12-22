@@ -1,3 +1,5 @@
+import logging
+
 from sklearn.metrics import mean_squared_error
 import numpy as np
 import warnings
@@ -29,6 +31,8 @@ def metrics(train_pred, valid_pred, y_train, y_valid):
 def evaluate(model, features, X_train, X_valid, y_train, y_valid):
     """Mean absolute percentage error"""
 
+    logger = logging.getLogger(__name__)
+
     # Make predictions
     train_pred = model.predict(X_train[features])
     valid_pred = model.predict(X_valid[features])
@@ -37,7 +41,9 @@ def evaluate(model, features, X_train, X_valid, y_train, y_valid):
     train_rmse, valid_rmse, train_mape, valid_mape = metrics(train_pred, valid_pred,
                                                              y_train, y_valid)
 
-    print(f'Training:   rmse = {round(train_rmse, 2)} \t mape = {round(train_mape, 2)}')
-    print(f'Validation: rmse = {round(valid_rmse, 2)} \t mape = {round(valid_mape, 2)}')
+    logger.info('Train: rmse = {} \t mape = {}'.format(
+        round(train_rmse, 2), round(train_mape, 2)))
+    logger.info('Validation: rmse = {} \t mape = {}'.format(
+        round(valid_rmse, 2), round(valid_mape, 2)))
     return train_pred, valid_pred
 
